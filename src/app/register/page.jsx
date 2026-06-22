@@ -164,7 +164,7 @@ const Register = () => {
           {/* Blood Group */}
           <select
             {...register("bloodGroup", { required: true })}
-            className="select w-full bg-white/10 border border-white/20 text-white"
+            className="select w-full bg-white text-black border border-gray-300"
           >
             <option value="">Select Blood Group</option>
             {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
