@@ -231,218 +231,267 @@ const AllUsers = () => {
 
         {/* Table */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-white rounded-3xl shadow-xl overflow-hidden"
-        >
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th>User</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  className="rounded-3xl bg-base-100 shadow-2xl border border-base-300 overflow-hidden"
+>
+  <div className="overflow-x-auto">
+    <table className="table table-zebra table-pin-rows">
 
-              <tbody>
-                {data?.users?.length > 0 ? (
-                  data.users.map(
-                    (u, index) => (
-                      <motion.tr
-                        key={u._id}
-                        initial={{
-                          opacity: 0,
-                          y: 15,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                        }}
-                        transition={{
-                          delay:
-                            index * 0.05,
-                        }}
-                        className="hover:bg-gray-50 transition"
-                      >
-                        <td>
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={
-                                u.avatar ||
-                                "https://i.pravatar.cc/150"
-                              }
-                              alt={
-                                u.name
-                              }
-                              className="w-12 h-12 rounded-full border object-cover"
-                            />
+      <thead>
+        <tr className="bg-base-200 text-base-content">
+          <th>#</th>
+          <th>User</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th className="text-center">Actions</th>
+        </tr>
+      </thead>
 
-                            <div>
-                              <h3 className="font-semibold">
-                                {u.name}
-                              </h3>
+      <tbody>
 
-                              <p className="text-xs text-gray-500">
-                                ID:
-                                {" "}
-                                {u._id?.slice(
-                                  -6
-                                )}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
+        {data?.users?.length > 0 ? (
 
-                        <td>
-                          {u.email}
-                        </td>
+          data.users.map((u, index) => (
 
-                        <td>
-                          <span
-                            className={`badge badge-lg capitalize ${
-                              u.role ===
-                              "admin"
-                                ? "badge-error"
-                                : u.role ===
-                                  "volunteer"
-                                ? "badge-warning"
-                                : "badge-info"
-                            }`}
-                          >
-                            {u.role}
-                          </span>
-                        </td>
+            <motion.tr
+              key={u._id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.04 }}
+              className="hover"
+            >
 
-                        <td>
-                          <span
-                            className={`badge badge-lg capitalize ${
-                              u.status ===
+              <td className="font-semibold">
+                {(page * LIMIT) + index + 1}
+              </td>
+
+              <td>
+
+                <div className="flex items-center gap-3">
+
+                  <div className="avatar">
+
+                    <div className="w-12 rounded-full ring ring-error ring-offset-base-100 ring-offset-2">
+
+                      <img
+                        src={
+                          u.avatar ||
+                          "https://i.pravatar.cc/150"
+                        }
+                        alt={u.name}
+                      />
+
+                    </div>
+
+                  </div>
+
+                  <div>
+
+                    <div className="font-bold">
+                      {u.name}
+                    </div>
+
+                    <div className="text-xs opacity-60">
+                      ID :
+                      {u._id.slice(-6)}
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+              <td>
+
+                <span className="text-sm">
+                  {u.email}
+                </span>
+
+              </td>
+
+              <td>
+
+                <div
+                  className={`badge badge-lg capitalize
+
+                  ${
+                    u.role === "admin"
+
+                      ? "badge-error"
+
+                      : u.role === "volunteer"
+
+                      ? "badge-warning"
+
+                      : "badge-info"
+
+                  }`}
+                >
+                  {u.role}
+                </div>
+
+              </td>
+
+              <td>
+
+                <div
+                  className={`badge badge-lg capitalize
+
+                  ${
+                    u.status === "active"
+
+                      ? "badge-success"
+
+                      : "badge-error"
+
+                  }`}
+                >
+                  {u.status}
+                </div>
+
+              </td>
+
+              <td>
+
+                <div className="dropdown dropdown-end">
+
+                  <label
+                    tabIndex={0}
+                    className="btn btn-sm btn-circle btn-ghost"
+                  >
+                    <FaEllipsisV />
+                  </label>
+
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content z-[100] menu p-2 shadow-xl bg-base-100 rounded-box w-56 border"
+                  >
+
+                    {u.status === "active" ? (
+
+                      <li>
+
+                        <button
+                          onClick={() =>
+                            handleStatusChange(
+                              u._id,
+                              "blocked"
+                            )
+                          }
+                        >
+                          🚫 Block User
+                        </button>
+
+                      </li>
+
+                    ) : (
+
+                      <li>
+
+                        <button
+                          onClick={() =>
+                            handleStatusChange(
+                              u._id,
                               "active"
-                                ? "badge-success"
-                                : "badge-error"
-                            }`}
-                          >
-                            {u.status}
-                          </span>
-                        </td>
+                            )
+                          }
+                        >
+                          ✅ Unblock User
+                        </button>
 
-                        <td className="relative">
-                          <button
-                            onClick={() =>
-                              setOpenMenuId(
-                                openMenuId ===
-                                  u._id
-                                  ? null
-                                  : u._id
-                              )
-                            }
-                            className="btn btn-sm btn-outline"
-                          >
-                            <FaEllipsisV />
-                          </button>
+                      </li>
 
-                          <AnimatePresence>
-                            {openMenuId ===
-                              u._id && (
-                              <motion.div
-                                initial={{
-                                  opacity: 0,
-                                  scale:
-                                    0.95,
-                                }}
-                                animate={{
-                                  opacity: 1,
-                                  scale: 1,
-                                }}
-                                exit={{
-                                  opacity: 0,
-                                  scale:
-                                    0.95,
-                                }}
-                                className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-2xl border z-50 overflow-hidden"
-                              >
-                                {u.status ===
-                                "active" ? (
-                                  <button
-                                    onClick={() =>
-                                      handleStatusChange(
-                                        u._id,
-                                        "blocked"
-                                      )
-                                    }
-                                    className="w-full px-4 py-3 text-red-900 text-left hover:bg-red-50"
-                                  >
-                                    🚫 Block User
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={() =>
-                                      handleStatusChange(
-                                        u._id,
-                                        "active"
-                                      )
-                                    }
-                                    className="w-full px-4 py-3 text-green-800 text-left hover:bg-green-50"
-                                  >
-                                    ✅ Unblock User
-                                  </button>
-                                )}
+                    )}
 
-                                {u.role ===
-                                  "donor" && (
-                                  <button
-                                    onClick={() =>
-                                      handleRoleChange(
-                                        u._id,
-                                        "volunteer"
-                                      )
-                                    }
-                                    className="w-full px-4 py-3 text-left text-indigo-800 hover:bg-yellow-50"
-                                  >
-                                    👨‍⚕️ Make
-                                    Volunteer
-                                  </button>
-                                )}
+                    {u.role === "donor" && (
 
-                                {u.role !==
-                                  "admin" && (
-                                  <button
-                                    onClick={() =>
-                                      handleRoleChange(
-                                        u._id,
-                                        "admin"
-                                      )
-                                    }
-                                    className="w-full px-4 py-3 text-left text-indigo-800 hover:bg-purple-50"
-                                  >
-                                    👑 Make
-                                    Admin
-                                  </button>
-                                )}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </td>
-                      </motion.tr>
-                    )
-                  )
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="text-center py-10"
-                    >
-                      No users found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
+                      <li>
+
+                        <button
+                          onClick={() =>
+                            handleRoleChange(
+                              u._id,
+                              "volunteer"
+                            )
+                          }
+                        >
+                          👨‍⚕️ Make Volunteer
+                        </button>
+
+                      </li>
+
+                    )}
+
+                    {u.role !== "admin" && (
+
+                      <li>
+
+                        <button
+                          onClick={() =>
+                            handleRoleChange(
+                              u._id,
+                              "admin"
+                            )
+                          }
+                        >
+                          👑 Make Admin
+                        </button>
+
+                      </li>
+
+                    )}
+
+                  </ul>
+
+                </div>
+
+              </td>
+
+            </motion.tr>
+
+          ))
+
+        ) : (
+
+          <tr>
+
+            <td
+              colSpan={6}
+              className="text-center py-16"
+            >
+
+              <div className="space-y-3">
+
+                <div className="text-5xl">
+                  👥
+                </div>
+
+                <h3 className="text-2xl font-bold">
+                  No Users Found
+                </h3>
+
+                <p className="text-base-content/60">
+                  No users match the selected filter.
+                </p>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        )}
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</motion.div>
 
         {/* Pagination */}
         {totalPages > 1 && (

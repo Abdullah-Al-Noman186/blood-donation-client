@@ -102,169 +102,209 @@ const AllBloodDonationRequests = () => {
         </div>
 
         {/* Table Card */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
-        >
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th>Requester</th>
-                  <th>Recipient</th>
-                  <th>Location</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Blood Group</th>
-                  <th>Status</th>
-                  <th>Donor Info</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
+        {/* Table Card */}
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  className="overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-2xl"
+>
+  <div className="overflow-x-auto">
+    <table className="table table-zebra table-pin-rows">
+      <thead>
+        <tr className="bg-base-200 text-base-content">
+          <th>#</th>
+          <th>Requester</th>
+          <th>Recipient</th>
+          <th>Location</th>
+          <th>Schedule</th>
+          <th>Blood</th>
+          <th>Status</th>
+          <th>Donor</th>
+          <th className="text-center">Actions</th>
+        </tr>
+      </thead>
 
-              <tbody>
-                <AnimatePresence>
-                  {data?.requests?.length > 0 ? (
-                    data.requests.map((req, index) => (
-                      <motion.tr
-                        key={req._id}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        whileHover={{
-                          backgroundColor: "#f9fafb",
-                        }}
-                        className="border-b"
-                      >
-                        <td className="font-medium">
-                          {req.requesterName}
-                        </td>
+      <tbody>
+        <AnimatePresence>
+          {data?.requests?.length > 0 ? (
+            data.requests.map((req, index) => (
+              <motion.tr
+                key={req._id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: index * 0.04 }}
+                className="hover"
+              >
+                <td className="font-semibold">
+                  {(page * LIMIT) + index + 1}
+                </td>
 
-                        <td>{req.recipientName}</td>
+                <td>
+                  <div className="flex items-center gap-3">
+                    <div className="avatar placeholder">
+                      <div className="bg-error text-white rounded-full w-10">
+                        <span className="text-sm">
+                          {req.requesterName?.charAt(0)}
+                        </span>
+                      </div>
+                    </div>
 
-                        <td>
-                          {req.recipientDistrict},{" "}
-                          {req.recipientUpazila}
-                        </td>
+                    <div>
+                      <div className="font-bold">
+                        {req.requesterName}
+                      </div>
 
-                        <td>{req.donationDate}</td>
+                      <div className="text-xs opacity-60">
+                        {req.requesterEmail}
+                      </div>
+                    </div>
+                  </div>
+                </td>
 
-                        <td>{req.donationTime}</td>
+                <td className="font-semibold">
+                  {req.recipientName}
+                </td>
 
-                        <td>
-                          <span className="badge badge-error badge-outline">
-                            {req.bloodGroup}
-                          </span>
-                        </td>
+                <td>
+                  <div>
+                    <div>{req.recipientDistrict}</div>
 
-                        <td>
-                          <StatusBadge
-                            status={req.donationStatus}
-                          />
-                        </td>
+                    <div className="text-xs opacity-60">
+                      {req.recipientUpazila}
+                    </div>
+                  </div>
+                </td>
 
-                        <td>
-                          {req.donationStatus ===
-                            "inprogress" &&
-                          req.donorInfo ? (
-                            <div className="text-sm">
-                              <p className="font-medium">
-                                {req.donorInfo.name}
-                              </p>
-                              <p className="text-gray-500">
-                                {req.donorInfo.email}
-                              </p>
-                            </div>
-                          ) : (
-                            "-"
-                          )}
-                        </td>
+                <td>
+                  <div>
+                    <div>{req.donationDate}</div>
 
-                        <td>
-                          <div className="flex flex-wrap gap-2">
-                            {req.donationStatus ===
-                              "inprogress" && (
-                              <>
-                                <button
-                                  onClick={() =>
-                                    updateStatus(
-                                      req._id,
-                                      "done"
-                                    )
-                                  }
-                                  className="btn btn-success text-green-700 btn-xs"
-                                >
-                                  Done
-                                </button>
+                    <div className="text-xs opacity-60">
+                      {req.donationTime}
+                    </div>
+                  </div>
+                </td>
 
-                                <button
-                                  onClick={() =>
-                                    updateStatus(
-                                      req._id,
-                                      "canceled"
-                                    )
-                                  }
-                                  className="btn btn-error text-red-600 btn-xs"
-                                >
-                                  Cancel
-                                </button>
-                              </>
-                            )}
+                <td>
+                  <div className="badge badge-error badge-outline badge-lg font-bold">
+                    {req.bloodGroup}
+                  </div>
+                </td>
 
-                            {role === "admin" && (
-                              <>
-                                <Link
-                                  href={`/dashboard/edit-donation-request/${req._id}`}
-                                  className="btn btn-outline btn-xs text-amber-400"
-                                >
-                                  Edit
-                                </Link>
+                <td>
+                  <StatusBadge
+                    status={req.donationStatus}
+                  />
+                </td>
 
-                                <button
-                                  onClick={() =>
-                                    handleDelete(req._id)
-                                  }
-                                  className="btn btn-outline btn-error text-red-500 btn-xs"
-                                >
-                                  Delete
-                                </button>
-                              </>
-                            )}
+                <td>
+                  {req.donationStatus === "inprogress" &&
+                  req.donorInfo ? (
+                    <div>
+                      <div className="font-semibold text-sm">
+                        {req.donorInfo.name}
+                      </div>
 
-                            <Link
-                              href={`/donation-requests/${req._id}`}
-                              className="btn btn-primary text-blue-400 btn-xs"
-                            >
-                              View
-                            </Link>
-                          </div>
-                        </td>
-                      </motion.tr>
-                    ))
+                      <div className="text-xs opacity-60">
+                        {req.donorInfo.email}
+                      </div>
+                    </div>
                   ) : (
-                    <tr>
-                      <td
-                        colSpan="9"
-                        className="text-center py-12"
-                      >
-                        <div className="space-y-2">
-                          <h3 className="text-xl font-semibold">
-                            No Requests Found
-                          </h3>
-                          <p className="text-gray-500">
-                            No donation requests match your
-                            current filter.
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
+                    <span className="badge badge-ghost">
+                      Not Assigned
+                    </span>
                   )}
-                </AnimatePresence>
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
+                </td>
+
+                <td>
+                  <div className="flex flex-wrap justify-center gap-2">
+
+                    {req.donationStatus === "inprogress" && (
+                      <>
+                        <button
+                          onClick={() =>
+                            updateStatus(
+                              req._id,
+                              "done"
+                            )
+                          }
+                          className="btn btn-success btn-xs"
+                        >
+                          ✓ Done
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            updateStatus(
+                              req._id,
+                              "canceled"
+                            )
+                          }
+                          className="btn btn-error btn-xs"
+                        >
+                          ✕ Cancel
+                        </button>
+                      </>
+                    )}
+
+                    {role === "admin" && (
+                      <>
+                        <Link
+                          href={`/dashboard/edit-donation-request/${req._id}`}
+                          className="btn btn-warning btn-outline btn-xs"
+                        >
+                          Edit
+                        </Link>
+
+                        <button
+                          onClick={() =>
+                            handleDelete(req._id)
+                          }
+                          className="btn btn-error btn-outline btn-xs"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+
+                    <Link
+                      href={`/donation-requests/${req._id}`}
+                      className="btn btn-primary btn-xs"
+                    >
+                      View
+                    </Link>
+                  </div>
+                </td>
+              </motion.tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={9}
+                className="text-center py-16"
+              >
+                <div className="space-y-3">
+                  <div className="text-5xl">
+                    🩸
+                  </div>
+
+                  <h3 className="text-2xl font-bold">
+                    No Donation Requests
+                  </h3>
+
+                  <p className="text-base-content/60">
+                    There are no requests matching the selected filter.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          )}
+        </AnimatePresence>
+      </tbody>
+    </table>
+  </div>
+</motion.div>
 
         {/* Pagination */}
         {totalPages > 1 && (

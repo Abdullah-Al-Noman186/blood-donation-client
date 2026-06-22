@@ -168,148 +168,242 @@ const MyDonationRequests = () => {
       </div>
 
       {/* TABLE (DESKTOP) */}
-      <div className="bg-white rounded-3xl shadow-xl overflow-x-auto">
-  <table className="table w-full table-fixed">
-    <thead className="bg-gray-50">
-      <tr>
-        <th className="w-40">Recipient</th>
-        <th className="w-48">Location</th>
-        <th className="w-40">Date</th>
-        <th className="w-24">Blood</th>
-        <th className="w-32">Status</th>
-        <th className="w-48">Donor</th>
-        <th className="w-56">Actions</th>
-      </tr>
-    </thead>
+     <div className="overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-2xl">
+  <div className="overflow-x-auto">
 
-    <tbody>
-      <AnimatePresence>
-        {data?.requests?.length > 0 ? (
-          data.requests.map((req, index) => (
-            <motion.tr
-              key={req._id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.03 }}
-              className="hover:bg-gray-50"
-            >
-              {/* Recipient */}
-              <td className="align-middle font-medium truncate">
-                {req.recipientName}
-              </td>
+    <table className="table table-zebra table-pin-rows">
 
-              {/* Location */}
-              <td className="align-middle truncate">
-                {req.recipientDistrict}, {req.recipientUpazila}
-              </td>
+      <thead>
+        <tr className="bg-base-200 text-base-content">
+          <th>Recipient</th>
+          <th>Location</th>
+          <th>Date & Time</th>
+          <th>Blood</th>
+          <th>Status</th>
+          <th>Donor</th>
+          <th className="text-center">Actions</th>
+        </tr>
+      </thead>
 
-              {/* Date */}
-              <td className="align-middle">
-                <div className="flex flex-col">
-                  <span>{req.donationDate}</span>
-                  <span className="text-xs text-gray-500">
-                    {req.donationTime}
-                  </span>
-                </div>
-              </td>
+      <tbody>
+        <AnimatePresence>
 
-              {/* Blood */}
-              <td className="align-middle">
-                <span className="badge badge-error badge-outline">
-                  {req.bloodGroup}
-                </span>
-              </td>
+          {data?.requests?.length > 0 ? (
 
-              {/* Status */}
-              <td className="align-middle">
-                <StatusBadge status={req.donationStatus} />
-              </td>
+            data.requests.map((req, index) => (
 
-              {/* Donor */}
-              <td className="align-middle">
-                {req.donationStatus === "inprogress" &&
-                req.donorInfo ? (
-                  <div className="truncate">
-                    <p className="font-medium truncate">
-                      {req.donorInfo.name}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">
-                      {req.donorInfo.email}
-                    </p>
+              <motion.tr
+                key={req._id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.03 }}
+                whileHover={{ scale: 1.002 }}
+              >
+
+                {/* Recipient */}
+
+                <td>
+                  <div className="flex items-center gap-3">
+
+                    <div className="avatar placeholder">
+                      <div className="bg-error text-white rounded-full w-12">
+                        <span className="font-bold">
+                          {req.recipientName?.charAt(0)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="font-semibold">
+                        {req.recipientName}
+                      </div>
+
+                      <div className="text-xs opacity-60">
+                        Blood Recipient
+                      </div>
+                    </div>
+
                   </div>
-                ) : (
-                  "-"
-                )}
-              </td>
+                </td>
 
-              {/* Actions */}
-              <td className="align-middle">
-                <div className="flex flex-wrap gap-1">
-                  {req.donationStatus === "inprogress" && (
-                    <>
-                      <button
-                        onClick={() =>
-                          updateStatus(req._id, "done")
-                        }
-                        className="btn btn-success btn-xs"
-                      >
-                        Done
-                      </button>
+                {/* Location */}
 
-                      <button
-                        onClick={() =>
-                          updateStatus(req._id, "canceled")
-                        }
-                        className="btn btn-error btn-xs"
-                      >
-                        Cancel
-                      </button>
-                    </>
+                <td>
+
+                  <div className="flex flex-col">
+
+                    <span className="font-medium">
+                      {req.recipientDistrict}
+                    </span>
+
+                    <span className="text-xs opacity-60">
+                      {req.recipientUpazila}
+                    </span>
+
+                  </div>
+
+                </td>
+
+                {/* Date */}
+
+                <td>
+
+                  <div className="flex flex-col">
+
+                    <span className="font-medium">
+                      {req.donationDate}
+                    </span>
+
+                    <span className="text-xs opacity-60">
+                      🕒 {req.donationTime}
+                    </span>
+
+                  </div>
+
+                </td>
+
+                {/* Blood */}
+
+                <td>
+
+                  <span className="badge badge-error badge-lg text-white font-bold">
+                    {req.bloodGroup}
+                  </span>
+
+                </td>
+
+                {/* Status */}
+
+                <td>
+
+                  <StatusBadge status={req.donationStatus} />
+
+                </td>
+
+                {/* Donor */}
+
+                <td>
+
+                  {req.donationStatus === "inprogress" &&
+                  req.donorInfo ? (
+
+                    <div>
+
+                      <p className="font-semibold">
+                        {req.donorInfo.name}
+                      </p>
+
+                      <p className="text-xs opacity-60">
+                        {req.donorInfo.email}
+                      </p>
+
+                    </div>
+
+                  ) : (
+
+                    <span className="text-base-content/50">
+                      —
+                    </span>
+
                   )}
 
-                  <Link
-                    href={`/dashboard/edit-donation-request/${req._id}`}
-                    className="btn btn-outline btn-xs"
-                  >
-                    <Edit size={14} />
-                  </Link>
+                </td>
 
-                  <button
-                    onClick={() => handleDelete(req._id)}
-                    className="btn btn-outline btn-error btn-xs"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                {/* Actions */}
 
-                  <Link
-                    href={`/donation-requests/${req._id}`}
-                    className="btn btn-outline btn-xs"
-                  >
-                    <Eye size={14} />
-                  </Link>
+                <td>
+
+                  <div className="flex justify-center flex-wrap gap-2">
+
+                    {req.donationStatus === "inprogress" && (
+                      <>
+                        <button
+                          onClick={() =>
+                            updateStatus(req._id, "done")
+                          }
+                          className="btn btn-success btn-sm"
+                        >
+                          Done
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            updateStatus(req._id, "canceled")
+                          }
+                          className="btn btn-error btn-sm"
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    )}
+
+                    <Link
+                      href={`/dashboard/edit-donation-request/${req._id}`}
+                      className="btn btn-warning btn-sm"
+                    >
+                      <Edit size={16} />
+                    </Link>
+
+                    <button
+                      onClick={() =>
+                        handleDelete(req._id)
+                      }
+                      className="btn btn-error btn-sm"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+
+                    <Link
+                      href={`/donation-requests/${req._id}`}
+                      className="btn btn-info btn-sm text-white"
+                    >
+                      <Eye size={16} />
+                    </Link>
+
+                  </div>
+
+                </td>
+
+              </motion.tr>
+
+            ))
+
+          ) : (
+
+            <tr>
+
+              <td colSpan={7}>
+
+                <div className="flex flex-col items-center justify-center py-16">
+
+                  <div className="avatar placeholder mb-5">
+                    <div className="bg-error text-white rounded-full w-24">
+                      <Droplets size={40} />
+                    </div>
+                  </div>
+
+                  <h2 className="text-2xl font-bold">
+                    No Donation Requests
+                  </h2>
+
+                  <p className="text-base-content/60 mt-2">
+                    You haven't created any donation requests yet.
+                  </p>
+
                 </div>
+
               </td>
-            </motion.tr>
-          ))
-        ) : (
-          <tr>
-            <td colSpan={7} className="text-center py-12">
-              <Droplets
-                size={50}
-                className="mx-auto text-red-400 mb-3"
-              />
-              <h3 className="font-bold text-xl">
-                No Requests Found
-              </h3>
-              <p className="text-gray-500">
-                Create your first donation request.
-              </p>
-            </td>
-          </tr>
-        )}
-      </AnimatePresence>
-    </tbody>
-  </table>
+
+            </tr>
+
+          )}
+
+        </AnimatePresence>
+      </tbody>
+
+    </table>
+
+  </div>
 </div>
 
       {/* MOBILE CARDS */}

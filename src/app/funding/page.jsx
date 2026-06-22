@@ -38,57 +38,38 @@ const Funding = () => {
     },
   });
 
-  const fundsList = Array.isArray(funds)
-    ? funds
-    : [];
+  const fundsList = Array.isArray(funds) ? funds : [];
 
   const totalRaised = fundsList.reduce(
-    (sum, fund) => sum + Number(fund.amount),
+    (sum, fund) => sum + Number(fund?.amount || 0),
     0
   );
 
   return (
     <PrivateRoute>
-
       <div className="min-h-screen bg-gradient-to-b from-red-50 via-white to-gray-50">
-
         {/* HERO */}
-
         <section className="bg-gradient-to-r from-red-600 via-red-500 to-pink-500 text-white">
-
           <div className="max-w-7xl mx-auto px-6 py-16">
-
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-
               <h1 className="text-4xl md:text-5xl font-bold">
-
                 Support Life Saving Missions ❤️
-
               </h1>
-
               <p className="mt-4 text-white/90 max-w-2xl">
-
                 Your contribution helps organize blood drives,
                 emergency transportation, donor awareness programs,
                 and saves thousands of lives every year.
-
               </p>
-
             </motion.div>
-
           </div>
-
         </section>
 
         {/* STATS */}
-
         <div className="max-w-7xl mx-auto px-6 -mt-10">
-
           <div className="grid md:grid-cols-3 gap-6">
-
             <motion.div
               whileHover={{ y: -5 }}
               className="bg-white rounded-3xl shadow-lg p-6"
@@ -97,283 +78,218 @@ const Funding = () => {
                 className="text-green-600 mb-3"
                 size={35}
               />
-
-              <p className="text-gray-500">
-                Total Raised
-              </p>
-
+              <p className="text-gray-500">Total Raised</p>
               <h2 className="text-3xl font-bold text-green-600">
-
                 ${totalRaised.toFixed(2)}
-
               </h2>
-
             </motion.div>
 
             <motion.div
               whileHover={{ y: -5 }}
               className="bg-white rounded-3xl shadow-lg p-6"
             >
-
               <Users
                 className="text-blue-600 mb-3"
                 size={35}
               />
-
-              <p className="text-gray-500">
-                Total Contributors
-              </p>
-
-              <h2 className="text-3xl font-bold">
-
-                {fundsList.length}
-
-              </h2>
-
+              <p className="text-gray-500">Total Contributors</p>
+              <h2 className="text-3xl font-bold">{fundsList.length}</h2>
             </motion.div>
 
             <motion.div
               whileHover={{ y: -5 }}
               className="bg-white rounded-3xl shadow-lg p-6"
             >
-
               <Heart
                 className="text-red-500 mb-3"
                 size={35}
               />
-
-              <p className="text-gray-500">
-                Every Donation Matters
-              </p>
-
-              <h2 className="text-3xl font-bold">
-                ❤️
-              </h2>
-
+              <p className="text-gray-500">Every Donation Matters</p>
+              <h2 className="text-3xl font-bold">❤️</h2>
             </motion.div>
-
           </div>
-
         </div>
 
         {/* TABLE */}
-
         <div className="max-w-7xl mx-auto px-6 py-10">
-
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 mb-8">
-
             <div>
-
-              <h2 className="text-3xl font-bold">
-
-                Recent Contributions
-
-              </h2>
-
+              <h2 className="text-3xl font-bold">Recent Contributions</h2>
               <p className="text-gray-500">
-
                 Thank you to everyone supporting the community.
-
               </p>
-
             </div>
-
             <button
-              onClick={() =>
-                setModalOpen(true)
-              }
+              onClick={() => setModalOpen(true)}
               className="btn bg-red-600 hover:bg-red-700 text-white rounded-full px-8"
             >
-
               <HandHeart size={18} />
-
               Give Fund
-
             </button>
-
           </div>
 
           {isLoading ? (
-            <div className="flex justify-center py-20">
-
-              <span className="loading loading-spinner loading-lg text-red-500"></span>
-
+            <div className="flex justify-center items-center py-24">
+              <span className="loading loading-spinner loading-lg text-error"></span>
             </div>
           ) : (
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-
+            <div className="overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-2xl">
               <div className="overflow-x-auto">
-
-                <table className="table table-zebra w-full">
-
-                  <thead className="bg-red-600 text-white">
-
-                    <tr>
-
-                      <th>Name</th>
-
-                      <th>Amount</th>
-
+                <table className="table table-zebra table-pin-rows">
+                  <thead>
+                    <tr className="bg-error text-white">
+                      <th>Contributor</th>
+                      <th>Contribution</th>
                       <th>Date</th>
-
+                      <th>Status</th>
                     </tr>
-
                   </thead>
-
                   <tbody>
-
-                    {fundsList.length === 0 ? (
-
-                      <tr>
-
-                        <td
-                          colSpan={3}
-                          className="py-16 text-center"
-                        >
-
-                          <div className="flex flex-col items-center">
-
-                            <Heart
-                              size={55}
-                              className="text-red-300 mb-4"
-                            />
-
-                            <h3 className="font-bold text-xl">
-
-                              No Funding Yet
-
-                            </h3>
-
-                            <p className="text-gray-500">
-
-                              Be the first person to support.
-
-                            </p>
-
-                          </div>
-
-                        </td>
-
-                      </tr>
-
-                    ) : (
-
+                    {fundsList.length > 0 ? (
                       fundsList.map((fund) => (
-
-                        <tr key={fund._id}>
-
-                          <td className="font-semibold">
-
-                            {fund.name}
-
-                          </td>
-
-                          <td className="font-bold text-green-600">
-
-                            $
-
-                            {Number(
-                              fund.amount
-                            ).toFixed(2)}
-
-                          </td>
-
+                        <motion.tr
+                          key={fund?._id || Math.random()}
+                          whileHover={{
+                            scale: 1.003,
+                          }}
+                          transition={{
+                            duration: 0.2,
+                          }}
+                        >
+                          {/* Contributor */}
                           <td>
-
-                            {new Date(
-                              fund.date
-                            ).toLocaleDateString()}
-
+                            <div className="flex items-center gap-3">
+                              <div className="avatar placeholder">
+                                <div className="bg-error text-white rounded-full w-12">
+                                  <span className="font-bold text-lg">
+                                    {fund?.name?.charAt(0)?.toUpperCase() || "?"}
+                                  </span>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="font-bold">
+                                  {fund?.name || "Anonymous"}
+                                </div>
+                                <div className="text-xs opacity-60">
+                                  Community Supporter
+                                </div>
+                              </div>
+                            </div>
                           </td>
 
-                        </tr>
+                          {/* Amount */}
+                          <td>
+                            <div className="badge badge-success badge-lg text-white font-bold">
+                              ${Number(fund?.amount || 0).toFixed(2)}
+                            </div>
+                          </td>
 
+                          {/* Date */}
+                          <td>
+                            <div className="flex flex-col">
+                              <span className="font-semibold">
+                                {fund?.date
+                                  ? new Date(fund.date).toLocaleDateString()
+                                  : "N/A"}
+                              </span>
+                              <span className="text-xs opacity-60">
+                                {fund?.date
+                                  ? new Date(fund.date).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })
+                                  : ""}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Status */}
+                          <td>
+                            <span className="badge badge-success gap-1">
+                              ❤️ Completed
+                            </span>
+                          </td>
+                        </motion.tr>
                       ))
-
+                    ) : (
+                      <tr>
+                        <td colSpan={4}>
+                          <div className="flex flex-col items-center justify-center py-20">
+                            <div className="avatar placeholder mb-5">
+                              <div className="bg-error text-white rounded-full w-24">
+                                <Heart size={42} />
+                              </div>
+                            </div>
+                            <h2 className="text-2xl font-bold">
+                              No Contributions Yet
+                            </h2>
+                            <p className="text-base-content/60 mt-2">
+                              Become the first supporter and help save lives.
+                            </p>
+                            <button
+                              onClick={() => setModalOpen(true)}
+                              className="btn btn-error mt-6 rounded-full"
+                            >
+                              <HandHeart size={18} />
+                              Donate Now
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
                     )}
-
                   </tbody>
-
                 </table>
-
               </div>
-
             </div>
           )}
 
-        </div>
-
-        {/* MODAL */}
-
-        <AnimatePresence>
-
-          {modalOpen && (
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4"
-            >
-
+          {/* MODAL */}
+          <AnimatePresence>
+            {modalOpen && (
               <motion.div
-                initial={{
-                  scale: 0.9,
-                  opacity: 0,
-                }}
-                animate={{
-                  scale: 1,
-                  opacity: 1,
-                }}
-                exit={{
-                  scale: 0.9,
-                  opacity: 0,
-                }}
-                className="bg-white rounded-3xl w-full max-w-md p-7 shadow-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4"
               >
-
-                <div className="flex justify-between items-center mb-6">
-
-                  <h3 className="text-2xl font-bold">
-
-                    Make a Donation
-
-                  </h3>
-
-                  <button
-                    onClick={() =>
-                      setModalOpen(false)
-                    }
-                    className="btn btn-circle btn-sm btn-ghost"
-                  >
-
-                    <X size={18} />
-
-                  </button>
-
-                </div>
-
-                <StripeProvider>
-
-                  <DonationForm
-                    onSuccess={() => {
-                      setModalOpen(false);
-                      refetch();
-                    }}
-                  />
-
-                </StripeProvider>
-
+                <motion.div
+                  initial={{
+                    scale: 0.9,
+                    opacity: 0,
+                  }}
+                  animate={{
+                    scale: 1,
+                    opacity: 1,
+                  }}
+                  exit={{
+                    scale: 0.9,
+                    opacity: 0,
+                  }}
+                  className="bg-white rounded-3xl w-full max-w-md p-7 shadow-2xl"
+                >
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-2xl font-bold">Make a Donation</h3>
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className="btn btn-circle btn-sm btn-ghost"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                  <StripeProvider>
+                    <DonationForm
+                      onSuccess={() => {
+                        setModalOpen(false);
+                        refetch();
+                      }}
+                    />
+                  </StripeProvider>
+                </motion.div>
               </motion.div>
-
-            </motion.div>
-
-          )}
-
-        </AnimatePresence>
-
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-
     </PrivateRoute>
   );
 };
