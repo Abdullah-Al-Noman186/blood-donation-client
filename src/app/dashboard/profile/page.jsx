@@ -172,7 +172,7 @@ const Profile = () => {
             <button
   type="submit"
   disabled={saving}
-  className="btn btn-error w-full text-green-500 hover:bg-green-100 flex items-center justify-center gap-2"
+  className="btn btn-error w-full text-white hover:bg-green-100 flex items-center justify-center gap-2"
 >
   {saving ? (
     <span className="loading loading-spinner loading-xs"></span>
