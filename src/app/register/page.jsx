@@ -12,6 +12,10 @@ import {
   EyeOff,
   UserPlus,
   Upload,
+  Mail,
+  Lock,
+  Droplets,
+  MapPin,
 } from "lucide-react";
 
 import { AuthContext } from "../../providers/AuthProvider";
@@ -30,18 +34,12 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const { createUser, updateUserProfile } =
-    useContext(AuthContext);
-
+  const { createUser, updateUserProfile } = useContext(AuthContext);
   const router = useRouter();
 
-  const [selectedDistrictId, setSelectedDistrictId] =
-    useState("");
-
+  const [selectedDistrictId, setSelectedDistrictId] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const avatarFile = watch("avatar");
 
   const districtUpazilas = upazilas.filter(
     (u) => u.district_id === selectedDistrictId
@@ -49,50 +47,28 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     if (data.password !== data.confirm_password) {
-      return Swal.fire(
-        "Error",
-        "Passwords do not match",
-        "error"
-      );
+      return Swal.fire("Error", "Passwords do not match", "error");
     }
 
     setLoading(true);
 
     try {
       // Upload image
-
       const formData = new FormData();
       formData.append("image", data.avatar[0]);
 
-      const imgRes = await axios.post(
-        imageUploadUrl,
-        formData
-      );
+      const imgRes = await axios.post(imageUploadUrl, formData);
+      const avatarUrl = imgRes.data.data.display_url;
 
-      const avatarUrl =
-        imgRes.data.data.display_url;
-
-      // Create user
-
-      await createUser(
-        data.email,
-        data.password
-      );
-
-      await updateUserProfile(
-        data.name,
-        avatarUrl
-      );
+      // Create auth user
+      await createUser(data.email, data.password);
+      await updateUserProfile(data.name, avatarUrl);
 
       const districtName =
-        districts.find(
-          (d) => d.id === data.district
-        )?.name || "";
+        districts.find((d) => d.id === data.district)?.name || "";
 
       const upazilaName =
-        upazilas.find(
-          (u) => u.id === data.upazila
-        )?.name || "";
+        upazilas.find((u) => u.id === data.upazila)?.name || "";
 
       const userInfo = {
         name: data.name,
@@ -103,10 +79,7 @@ const Register = () => {
         upazila: upazilaName,
       };
 
-      await axios.post(
-        `${API_URL}/users`,
-        userInfo
-      );
+      await axios.post(`${API_URL}/users`, userInfo);
 
       Swal.fire({
         icon: "success",
@@ -116,115 +89,85 @@ const Register = () => {
 
       router.push("/");
     } catch (err) {
-      Swal.fire(
-        "Error",
-        err?.message || "Something went wrong",
-        "error"
-      );
+      Swal.fire("Error", err?.message || "Something went wrong", "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-100 px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 via-pink-600 to-red-700 px-4 py-10 overflow-hidden">
+
+      {/* Background glow */}
+      <div className="absolute w-[400px] h-[400px] bg-white/10 blur-3xl rounded-full top-10 left-10"></div>
+      <div className="absolute w-[400px] h-[400px] bg-yellow-300/10 blur-3xl rounded-full bottom-10 right-10"></div>
+
+      {/* Card */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xl bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-8 border"
+        className="relative w-full max-w-xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 text-white"
       >
-        {/* Header */}
 
+        {/* Header */}
         <div className="text-center mb-6">
+
           <div className="flex justify-center mb-3">
-            <div className="bg-red-100 p-3 rounded-2xl">
-              <UserPlus
-                className="text-red-500"
-                size={28}
-              />
+            <div className="bg-white/20 p-4 rounded-2xl">
+              <UserPlus className="text-white" size={30} />
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold">
+          <h2 className="text-3xl font-extrabold">
             Create Account
           </h2>
 
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-white/70 text-sm mt-1">
             Join and help save lives ❤️
           </p>
         </div>
 
-        {/* Form */}
+        {/* FORM */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4"
-        >
           {/* Name */}
-
           <input
-            {...register("name", {
-              required: true,
-            })}
+            {...register("name", { required: true })}
             placeholder="Full Name"
-            className="input input-bordered w-full"
+            className="input w-full bg-white/10 border border-white/20 text-white placeholder-white/60"
           />
-
           {errors.name && (
-            <p className="text-red-500 text-sm">
-              Name is required
-            </p>
+            <p className="text-red-200 text-sm">Name is required</p>
           )}
 
           {/* Email */}
-
-          <input
-            {...register("email", {
-              required: true,
-            })}
-            type="email"
-            placeholder="Email"
-            className="input input-bordered w-full"
-          />
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 text-white/60" size={18} />
+            <input
+              {...register("email", { required: true })}
+              type="email"
+              placeholder="Email"
+              className="input w-full pl-10 bg-white/10 border border-white/20 text-white placeholder-white/60"
+            />
+          </div>
 
           {/* Avatar */}
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Upload Avatar
-            </label>
-
+          <div>
+            <label className="text-sm text-white/80">Upload Avatar</label>
             <input
-              {...register("avatar", {
-                required: true,
-              })}
+              {...register("avatar", { required: true })}
               type="file"
-              className="file-input file-input-bordered w-full"
+              className="file-input w-full mt-1 bg-white/10 border border-white/20 text-white"
             />
           </div>
 
           {/* Blood Group */}
-
           <select
-            {...register("bloodGroup", {
-              required: true,
-            })}
-            className="select select-bordered w-full"
+            {...register("bloodGroup", { required: true })}
+            className="select w-full bg-white/10 border border-white/20 text-white"
           >
-            <option value="">
-              Select Blood Group
-            </option>
-
-            {[
-              "A+",
-              "A-",
-              "B+",
-              "B-",
-              "AB+",
-              "AB-",
-              "O+",
-              "O-",
-            ].map((bg) => (
+            <option value="">Select Blood Group</option>
+            {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
               <option key={bg} value={bg}>
                 {bg}
               </option>
@@ -232,22 +175,12 @@ const Register = () => {
           </select>
 
           {/* District */}
-
           <select
-            {...register("district", {
-              required: true,
-            })}
-            onChange={(e) =>
-              setSelectedDistrictId(
-                e.target.value
-              )
-            }
-            className="select select-bordered w-full"
+            {...register("district", { required: true })}
+            onChange={(e) => setSelectedDistrictId(e.target.value)}
+            className="select w-full bg-white/10 border border-white/20 text-white"
           >
-            <option value="">
-              Select District
-            </option>
-
+            <option value="">Select District</option>
             {districts.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.name}
@@ -256,17 +189,11 @@ const Register = () => {
           </select>
 
           {/* Upazila */}
-
           <select
-            {...register("upazila", {
-              required: true,
-            })}
-            className="select select-bordered w-full"
+            {...register("upazila", { required: true })}
+            className="select w-full bg-white/10 border border-white/20 text-white"
           >
-            <option value="">
-              Select Upazila
-            </option>
-
+            <option value="">Select Upazila</option>
             {districtUpazilas.map((u) => (
               <option key={u.id} value={u.id}>
                 {u.name}
@@ -275,73 +202,61 @@ const Register = () => {
           </select>
 
           {/* Password */}
-
           <div className="relative">
+            <Lock className="absolute left-3 top-3 text-white/60" size={18} />
+
             <input
-              {...register("password", {
-                required: true,
-                minLength: 6,
-              })}
+              {...register("password", { required: true, minLength: 6 })}
               type={showPass ? "text" : "password"}
               placeholder="Password"
-              className="input input-bordered w-full pr-10"
+              className="input w-full pl-10 pr-10 bg-white/10 border border-white/20 text-white"
             />
 
             <button
               type="button"
-              onClick={() =>
-                setShowPass(!showPass)
-              }
-              className="absolute right-3 top-3 text-gray-500"
+              onClick={() => setShowPass(!showPass)}
+              className="absolute right-3 top-3 text-white/60"
             >
-              {showPass ? (
-                <EyeOff size={18} />
-              ) : (
-                <Eye size={18} />
-              )}
+              {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
           {/* Confirm Password */}
-
           <input
-            {...register("confirm_password", {
-              required: true,
-            })}
+            {...register("confirm_password", { required: true })}
             type="password"
             placeholder="Confirm Password"
-            className="input input-bordered w-full"
+            className="input w-full bg-white/10 border border-white/20 text-white"
           />
 
           {/* Submit */}
-
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-error w-full text-green-500 flex items-center justify-center gap-2"
+            className="w-full bg-white text-red-600 font-bold py-3 rounded-xl hover:bg-gray-100 transition flex items-center justify-center gap-2"
           >
             {loading ? (
               <span className="loading loading-spinner loading-sm"></span>
             ) : (
               <>
                 <Upload size={18} />
-                Register
+                Create Account
               </>
             )}
           </button>
         </form>
 
         {/* Footer */}
-
-        <p className="text-center mt-5 text-sm">
+        <p className="text-center mt-5 text-sm text-white/70">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-red-500 font-semibold hover:underline"
+            className="text-yellow-200 font-semibold hover:underline"
           >
             Login
           </Link>
         </p>
+
       </motion.div>
     </div>
   );
