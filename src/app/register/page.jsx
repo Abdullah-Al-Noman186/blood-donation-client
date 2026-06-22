@@ -176,30 +176,32 @@ const Register = () => {
 
           {/* District */}
           <select
-            {...register("district", { required: true })}
-            onChange={(e) => setSelectedDistrictId(e.target.value)}
-            className="select w-full bg-white/10 border border-white/20 text-white"
-          >
-            <option value="">Select District</option>
-            {districts.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
+  {...register("district", { required: true })}
+  onChange={(e) => setSelectedDistrictId(e.target.value)}
+  className="select w-full bg-white text-black border border-gray-300"
+>
+  <option value="">Select District</option>
+
+  {districts.map((d) => (
+    <option key={d.id} value={d.id}>
+      {d.name}
+    </option>
+  ))}
+</select>
 
           {/* Upazila */}
           <select
-            {...register("upazila", { required: true })}
-            className="select w-full bg-white/10 border border-white/20 text-white"
-          >
-            <option value="">Select Upazila</option>
-            {districtUpazilas.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.name}
-              </option>
-            ))}
-          </select>
+  {...register("upazila", { required: true })}
+  className="select w-full bg-white text-black border border-gray-300"
+>
+  <option value="">Select Upazila</option>
+
+  {districtUpazilas.map((u) => (
+    <option key={u.id} value={u.id}>
+      {u.name}
+    </option>
+  ))}
+</select>
 
           {/* Password */}
           <div className="relative">
