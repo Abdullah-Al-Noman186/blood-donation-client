@@ -93,7 +93,7 @@ const Funding = () => {
                 size={35}
               />
               <p className="text-gray-500">Total Contributors</p>
-              <h2 className="text-3xl font-bold">{fundsList.length}</h2>
+              <h2 className="text-3xl text-blue-700 font-bold">{fundsList.length}</h2>
             </motion.div>
 
             <motion.div
@@ -114,7 +114,7 @@ const Funding = () => {
         <div className="max-w-7xl mx-auto px-6 py-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 mb-8">
             <div>
-              <h2 className="text-3xl font-bold">Recent Contributions</h2>
+              <h2 className="text-3xl text-black font-bold">Recent Contributions</h2>
               <p className="text-gray-500">
                 Thank you to everyone supporting the community.
               </p>

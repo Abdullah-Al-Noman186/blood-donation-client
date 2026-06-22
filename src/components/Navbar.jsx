@@ -191,7 +191,7 @@ const Navbar = () => {
                       onClick={() =>
                         setDropdownOpen(false)
                       }
-                      className="block px-4 py-3 hover:bg-red-50 transition"
+                      className="block px-4 py-3 text-black hover:bg-red-50 transition"
                     >
                       Dashboard
                     </Link>
@@ -221,7 +221,7 @@ const Navbar = () => {
           onClick={() =>
             setMobileOpen(!mobileOpen)
           }
-          className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+          className="lg:hidden p-2 rounded-lg text-black hover:bg-gray-100"
         >
           {mobileOpen ? (
             <FaTimes size={22} />
